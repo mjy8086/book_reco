@@ -2,7 +2,8 @@ import requests
 import json
 import xmltodict
 import pandas as pd
-from src.crawler.tool import get_book_data
+# from src.crawler.tool import get_book_data
+from tool import get_book_data
 import os
 import datetime
 import time
@@ -11,7 +12,7 @@ from configparser import ConfigParser
 
 # 사용자 명시
 config_parser = ConfigParser()
-config_parser.read("config/config.ini")
+config_parser.read("/home/mjy/Age2/book_reco/config/config.ini")
 user = config_parser["user"]["active_user"]
 num = config_parser["user"]["number_cut"]
 
@@ -19,17 +20,17 @@ num = config_parser["user"]["number_cut"]
 today = datetime.date.today()
 
 # 책 데이터 저장 폴더
-os.makedirs("output/book_data", exist_ok=True)
+os.makedirs("/home/mjy/Age2/book_reco/output/book_data", exist_ok=True)
 
 # API URL
 url = "http://data4library.kr/api/usageAnalysisList"
 
 # API Key 가져오기
-with open("config/book_api.json", "r") as f:
+with open("/home/mjy/Age2/book_reco/config/book_api.json", "r") as f:
     api_key = json.load(f)["api_key"]
 
 # ISBN 13 가져오기
-list_isbn = pd.read_csv(f"data/data_cut_{num}.csv")['ISBN'].to_list()
+list_isbn = pd.read_csv(f"/home/mjy/Age2/book_reco/data/data_cut_{num}.csv")['ISBN'].to_list()
 
 # API 제한
 limit_api = 30_000
@@ -83,12 +84,12 @@ while limit_api > 0:
 
 # 데이터 프레임 저장
 df = pd.DataFrame(list_book_data)
-df.to_csv(f"output/book_data/{today}-{user}-crawling.csv", index=False)
+df.to_csv(f"/home/mjy/Age2/book_reco/output/book_data/{today}-{user}-crawling.csv", index=False)
 
 # 남은 ISBN 저장
 df_remain = pd.DataFrame(list_isbn, columns=["ISBN"])
 # df_remain.to_csv("data/data_cut_remained.csv", index=False)
-df_remain.to_csv(f"data/data_cut_{num}.csv", index=False)
+df_remain.to_csv(f"/home/mjy/Age2/book_reco/data/data_cut_{num}.csv", index=False)
 
 print()
 print("=============================================")

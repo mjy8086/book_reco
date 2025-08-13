@@ -7,11 +7,12 @@ import xmltodict
 url = "http://data4library.kr/api/srchDtlList"
 
 # API Key 가져오기
-with open("config/book_api.json", "r") as f:
+with open("/home/mjy/Age2/book_reco/config/book_api.json", "r") as f:
     api_key = json.load(f)["api_key"]
 
 # ISBN 13 가져오기
-isbn13 = "9791198682550"    # 너에게 들려주는 단단한 말
+# isbn13 = "9791198682550"    # 너에게 들려주는 단단한 말
+isbn13 = "9791130667584"
 
 # Parameter
 params = {
@@ -27,7 +28,7 @@ try:
     get_response = requests.get(url, params=params)
     get_response.raise_for_status()     # HTTP 상태 코드(200, 404, 500 등) 확인
     data = xmltodict.parse(get_response.content)
-    with open("output/api_sample_detail.json", "w", encoding="utf-8") as f:
+    with open("/home/mjy/Age2/book_reco/output/api_sample_detail.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     print(data)
 
